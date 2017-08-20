@@ -1,0 +1,25 @@
+GEM
+  remote: https://gems.ruby-china.org/
+  specs:
+    async (1.0.0)
+      nio4r
+      timers (~> 4.1)
+    async-dns (1.0.0)
+      async-io (~> 1.0)
+    async-io (1.0.0)
+      async (~> 1.0)
+    hitimes (1.2.6)
+    nio4r (2.1.0)
+    rubydns (2.0.1)
+      async-dns (~> 1.0)
+    timers (4.1.2)
+      hitimes
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rubydns
+
+BUNDLED WITH
+   1.12.5
