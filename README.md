@@ -23,6 +23,15 @@ sudo ln -s /path/to/etc-resolver-dev /etc/resolver/lh
 ping some.demo.dev
 ```
 
+## How to build and publish public docker images?
+
+```
+# first test locally
+docker login # login docker hub registry to push
+docker tag devdns:latest cao7113/devdns:v0.0.1
+docker push cao7113/devdns:v0.0.1
+```
+
 ## History
 
 * 2016.12 开始使用https://github.com/madleech/MichaelsDnsServer
