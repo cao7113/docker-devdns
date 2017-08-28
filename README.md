@@ -6,6 +6,7 @@
 ## Quickstart
 
 ```
+rake build
 docker-compose up -d
 dig @localhost -p5300 a.test.dev
 
@@ -17,13 +18,10 @@ docker logs -f devdns
 
 ```
 sudo ln -s /path/to/etc-resolver-dev /etc/resolver/dev
+sudo ln -s /path/to/etc-resolver-dev /etc/resolver/lh
 # try 
 ping some.demo.dev
 ```
-
-## Todo
-
-* optimize docker image size
 
 ## History
 

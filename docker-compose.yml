@@ -1,7 +1,7 @@
 version: '2'
 services:
-  rubydns:
-    build: .
+  devdns:
+    image: devdns:latest
     container_name: devdns
     restart: always
     ports:
