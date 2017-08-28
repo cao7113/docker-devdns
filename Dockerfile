@@ -5,5 +5,5 @@ RUN mkdir /app
 WORKDIR /app
 COPY Gemfile Gemfile.lock ./
 RUN bundle install --binstubs --verbose
-COPY . .
+COPY devdns.rb ./
 CMD bundle exec ./devdns.rb
