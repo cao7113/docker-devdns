@@ -1,4 +1,0 @@
-# rubydns server
-# put me in /etc/resolver/dev
-nameserver 127.0.0.1
-port 5300

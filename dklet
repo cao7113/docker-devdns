@@ -1,0 +1,72 @@
+#!/usr/bin/env rundklet
+add_note <<~Note
+  make DNS for development friendly
+Note
+
+register :port, '5300'
+
+# https://docs.docker.com/develop/develop-images/dockerfile_best-practices
+write_dockerfile <<~Desc
+  FROM ruby:2.5-alpine3.7
+  LABEL maintainer=dailyops
+  RUN apk update && apk add build-base && mkdir /app
+  WORKDIR /app
+  COPY Gemfile ./
+  RUN bundle install --binstubs --verbose
+  COPY devdns.rb ./
+  CMD bundle exec ./devdns.rb
+Desc
+
+register_docker_image "docklet/devdns:newest"
+
+write_specfile <<~Desc
+  version: '2'
+  services:
+    devdns:
+      image: #{docker_image}
+      container_name: devdns
+      restart: always
+      ports:
+      - "#{fetch(:port)}:#{fetch(:port)}/tcp"
+      - "#{fetch(:port)}:#{fetch(:port)}/udp"
+Desc
+
+task :main do
+  system <<~Desc
+    docker-compose -f #{specfile} up -d
+  Desc
+end
+
+before_task :clean do
+  system <<~Desc
+    docker-compose -f #{specfile} down
+  Desc
+end
+
+custom_commands do
+  desc 'conf', 'config dns resolver on Mac test'
+  def conf(path = '/etc/resolver/lh')
+    tmpl = <<~Desc
+      # rubydns server powered
+      nameserver 127.0.0.1
+      port #{fetch(:port)}
+    Desc
+
+    erb = ERB.new(tmpl, nil, '%<>')
+    rendered = erb.result(binding)
+    
+    fpath = ::Util.tmpfile_for(rendered)
+    system "sudo cp -i #{fpath} #{path}; sudo cat #{path}"
+    puts "updated file: #{path}"
+  end
+
+  desc 'test', 'test domain resolving'
+  def test
+    system <<~Desc
+      ping -c 2 a.c.lh
+      ping -c 2 a.d2.lh
+    Desc
+  end
+end
+
+let_cli_magic_start! # make dockerize fun with ruby 

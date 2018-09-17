@@ -6,21 +6,14 @@
 ## Quickstart
 
 ```
-rake build
-docker-compose up -d
-dig @localhost -p5300 a.test.dev
+./dklet  # powered by kc
+dig @localhost -p5300 a.test.lh
 
 # 查看log
 docker logs -f devdns
-```
 
-## Usage on Mac host
-
-```
-sudo ln -s /path/to/etc-resolver-dev /etc/resolver/dev
-sudo ln -s /path/to/etc-resolver-dev /etc/resolver/lh
-# try 
-ping some.demo.dev
+# Usage on Mac host
+./dklet conf
 ```
 
 ## How to build and publish public docker images?
@@ -49,3 +42,4 @@ Has configured autobuild with github pushed tags: vx.x.x
 
   更多参考[rubydns samples](https://github.com/socketry/rubydns/tree/master/examples)
 
+* refactor to use kc dklet
