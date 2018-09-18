@@ -1,9 +1,11 @@
 #!/usr/bin/env rundklet
 add_note <<~Note
-  make DNS for development friendly
+  make DNS friendly for daily development
 Note
 
+register_net 'dailyops'
 register :port, '5300'
+register_docker_image "docklet/devdns:newest"
 
 # https://docs.docker.com/develop/develop-images/dockerfile_best-practices
 write_dockerfile <<~Desc
@@ -17,8 +19,6 @@ write_dockerfile <<~Desc
   CMD bundle exec ./devdns.rb
 Desc
 
-register_docker_image "docklet/devdns:newest"
-
 write_specfile <<~Desc
   version: '2'
   services:
@@ -29,17 +29,23 @@ write_specfile <<~Desc
       ports:
       - "#{fetch(:port)}:#{fetch(:port)}/tcp"
       - "#{fetch(:port)}:#{fetch(:port)}/udp"
+  networks:
+    default:
+      external:
+        name: #{netname}
 Desc
 
 task :main do
+  invoke :netup, [], {}
+
   system <<~Desc
-    docker-compose -f #{specfile} up -d
+    #{compose_cmd} up -d
   Desc
 end
 
 before_task :clean do
   system <<~Desc
-    docker-compose -f #{specfile} down
+    #{compose_cmd} down
   Desc
 end
 
