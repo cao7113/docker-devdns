@@ -74,5 +74,3 @@ custom_commands do
     Desc
   end
 end
-
-let_cli_magic_start! # make dockerize fun with ruby 
