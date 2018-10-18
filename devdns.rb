@@ -18,7 +18,9 @@ DEFAULT_HOST = ENV['DEFAULT_HOST'] || '127.0.0.1'
 RubyDNS.run_server(INTERFACES) do
   self.logger = Logger.new($stdout)
 
-	match(%r{\.(dev|lh)$}, IN::A) do |transaction|
+  # .dev has been in used in chrome, firefox, not safari, force https
+  # https://ma.ttias.be/chrome-force-dev-domains-https-via-preloaded-hsts/
+	match(%r{\.(lh|local)$}, IN::A) do |transaction|
     logger.info "==handling domain: #{transaction.name} ..."
     transaction.respond!(DEFAULT_HOST)
 	end

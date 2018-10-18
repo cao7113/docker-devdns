@@ -3,9 +3,9 @@ add_note <<~Note
   make DNS friendly for daily development
 Note
 
-register_net 'dailyops'
+register_net
+register :appname, 'devdns'
 register :port, '5300'
-register_docker_image "docklet/devdns:newest"
 
 # https://docs.docker.com/develop/develop-images/dockerfile_best-practices
 write_dockerfile <<~Desc
@@ -64,6 +64,13 @@ custom_commands do
     fpath = ::Util.tmpfile_for(rendered)
     system "sudo cp -i #{fpath} #{path}; sudo cat #{path}"
     puts "updated file: #{path}"
+  end
+
+  desc 'ls', 'list domain support'
+  def ls
+    system <<~Desc
+      ls -l /etc/resolver/
+    Desc
   end
 
   desc 'test', 'test domain resolving'
